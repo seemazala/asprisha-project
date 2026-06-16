@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "AISPL",
+  "name": "Asprisha Innovation Solutions Pvt. Ltd.",
+  "description": "Transforming Ideas Into Digital Excellence - Web Development, Mobile Apps, E-Commerce, and Cloud Solutions",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +21,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#0dcfcf",
+  "background_color": "#070d1f"
 }
