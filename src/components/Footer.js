@@ -149,7 +149,7 @@ const Footer = ({ setActivePage }) => {
               <a href="mailto:seemazala0422@gmail.com" style={{ color: 'var(--muted)', textDecoration: 'none', fontSize: '0.82rem' }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--teal)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}>
-                seemazala0422@gmail.com
+                info@asprisha.com
               </a>
             </div>
             <div style={{ color: 'var(--muted)', fontSize: '0.82rem', lineHeight: 1.5 }}>
