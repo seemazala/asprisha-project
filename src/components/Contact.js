@@ -50,7 +50,7 @@ const Contact = () => {
 
   const contactInfo = [
     { icon: '📞', label: 'Phone', val: '+91 9978567153', href: 'tel:+919978567153' },
-    { icon: '📧', label: 'Email', val: 'seemazala0422@gmail.com', href: 'mailto:seemazala0422@gmail.com' },
+    { icon: '📧', label: 'Email', val: 'info@asprisha.com', href: 'mailto:info@asprisha.com' },
     { icon: '📍', label: 'Address', val: '40, Digvijay Plot, Near Pavan Chaki Road, Jamnagar, Gujarat - 361005', href: null },
     { icon: '📱', label: 'Instagram', val: '@asprisha.innovative', href: 'https://www.instagram.com/asprisha.innovative' },
   ];
