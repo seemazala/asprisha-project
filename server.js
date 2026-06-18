@@ -16,6 +16,7 @@ app.use(cors({
     'http://localhost:5173',
     'https://asprisha.com',
     'https://www.asprisha.com',
+    'https://admin.asprisha.com',
     'https://asprisha-frontend.onrender.com'
   ],
   credentials: true,
