@@ -9,8 +9,15 @@ const app = express();
 connectDB();
 
 // Middleware
+// Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:5173'],
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:5173',
+    'https://asprisha.com',
+    'https://www.asprisha.com',
+    'https://asprisha-frontend.onrender.com'
+  ],
   credentials: true,
 }));
 app.use(express.json());
