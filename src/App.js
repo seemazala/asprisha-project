@@ -14,21 +14,20 @@ function App() {
   const [backendStatus, setBackendStatus] = useState('checking');
 
   useEffect(() => {
-    // Check backend connection
-    const checkBackend = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/health');
-        if (response.ok) {
-          setBackendStatus('connected');
-        } else {
-          setBackendStatus('error');
-        }
-      } catch (error) {
+  const checkBackend = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/health`);
+      if (response.ok) {
+        setBackendStatus('connected');
+      } else {
         setBackendStatus('error');
       }
-    };
-    checkBackend();
-  }, []);
+    } catch (error) {
+      setBackendStatus('error');
+    }
+  };
+  checkBackend();
+}, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
