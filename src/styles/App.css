@@ -1365,11 +1365,23 @@ body {
     justify-content: center;
   }
 
+  .logo-wrapper {
+    width: 100%;
+    justify-content: center;
+    position: relative;
+  }
+
+  .logo-mark {
+    position: absolute;
+    left: 0;
+  }
+
   /* Logo */
   .logo-subtext {
-    font-size: 0.46rem;
-    max-width: 205px;
-    line-height: 1.2;
+    font-size: 0.58rem;
+    max-width: 230px;
+    line-height: 1.15;
+    text-align: center;
   }
 
   .logo-text {
@@ -1478,7 +1490,7 @@ body {
 
   .logo-wrapper {
     align-items: center;
-    gap: 9px;
+    gap: 0;
     max-width: calc(100vw - 72px);
   }
 
@@ -1488,10 +1500,10 @@ body {
 
   .logo-subtext {
     display: block;
-    max-width: 178px;
-    font-size: 0.4rem;
+    max-width: 205px;
+    font-size: 0.52rem;
     line-height: 1.15;
-    text-align: left;
+    text-align: center;
     letter-spacing: 0.02em;
   }
 
@@ -1540,8 +1552,8 @@ body {
   }
 
   .logo-subtext {
-    max-width: 145px;
-    font-size: 0.32rem;
+    max-width: 175px;
+    font-size: 0.43rem;
   }
 
   .stats-grid {
