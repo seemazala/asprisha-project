@@ -16,16 +16,16 @@ const Navbar = ({ activePage, setActivePage }) => {
 
       {/* Logo + Brand — logo on top, text below */}
       <div className="logo-wrapper" onClick={() => setActivePage('Home')}>
-        <img
-          src="/logo.png"
-          alt="AISPL Logo"
-          className="logo-img"
-          onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
-        />
-        <div className="logo-text-block">
+        <div className="logo-mark">
+          <img
+            src="/logo.png"
+            alt="AISPL Logo"
+            className="logo-img"
+            onError={(e) => { e.target.onerror = null; e.target.style.display = 'none'; }}
+          />
           <div className="logo-text">AISPL</div>
-          <div className="logo-subtext">Asprisha Innovation Solution Private Limited</div>
         </div>
+        <div className="logo-subtext">Asprisha Innovation Solution Private Limited</div>
       </div>
 
       {/* Desktop Nav */}

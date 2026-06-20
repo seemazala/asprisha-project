@@ -151,10 +151,18 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   cursor: pointer;
   background: transparent !important;
   text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
   flex-shrink: 0;
 }
 
@@ -169,19 +177,11 @@ body {
   flex-shrink: 0;
 }
 
-/* Text block below logo */
-.logo-text-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 3px;
-}
-
 /* "AISPL" — teal, bold, clearly visible */
 .logo-text {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.12rem;
+  font-size: 1rem;
   color: var(--teal);
   letter-spacing: 0.12em;
   line-height: 1;
@@ -190,15 +190,15 @@ body {
 /* Full company name */
 .logo-subtext {
   font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 0.72rem;
+  font-weight: 600;
+  font-size: 0.82rem;
   color: var(--teal);
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  line-height: 1.15;
+  line-height: 1.2;
   text-align: left;
   opacity: 0.9;
-  white-space: nowrap;
+  max-width: 310px;
 }
 
 /* Ensure no bg on any navbar/footer img */
@@ -1331,7 +1331,8 @@ body {
   }
 
   .logo-subtext {
-    font-size: 0.58rem;
+    font-size: 0.68rem;
+    max-width: 260px;
   }
 
   .stats-grid {
@@ -1367,13 +1368,12 @@ body {
   /* Logo */
   .logo-subtext {
     font-size: 0.46rem;
-    max-width: 210px;
+    max-width: 205px;
     line-height: 1.2;
-    white-space: normal;
   }
 
   .logo-text {
-    font-size: 1.02rem;
+    font-size: 0.86rem;
   }
 
   .logo-img {
@@ -1478,18 +1478,18 @@ body {
 
   .logo-wrapper {
     align-items: center;
-    gap: 8px;
+    gap: 9px;
     max-width: calc(100vw - 72px);
   }
 
-  .logo-text-block {
-    align-items: flex-start;
+  .logo-mark {
+    gap: 2px;
   }
 
   .logo-subtext {
     display: block;
-    max-width: 185px;
-    font-size: 0.38rem;
+    max-width: 178px;
+    font-size: 0.4rem;
     line-height: 1.15;
     text-align: left;
     letter-spacing: 0.02em;
@@ -1501,7 +1501,7 @@ body {
   }
 
   .logo-text {
-    font-size: 0.95rem;
+    font-size: 0.78rem;
   }
 
   .about-info-grid {
@@ -1540,8 +1540,8 @@ body {
   }
 
   .logo-subtext {
-    max-width: 155px;
-    font-size: 0.31rem;
+    max-width: 145px;
+    font-size: 0.32rem;
   }
 
   .stats-grid {
