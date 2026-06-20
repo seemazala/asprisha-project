@@ -24,7 +24,7 @@ const Navbar = ({ activePage, setActivePage }) => {
         />
         <div className="logo-text-block">
           <div className="logo-text">AISPL</div>
-          <div className="logo-subtext">Asprisha Innovation Solutions Pvt. Ltd.</div>
+          <div className="logo-subtext">Asprisha Innovation Solution Private Limited</div>
         </div>
       </div>
 
