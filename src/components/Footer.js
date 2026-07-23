@@ -5,16 +5,18 @@ const Footer = ({ setActivePage }) => {
 
   // Services - EXACTLY MATCHING with Services Page
   const services = [
+    'Website Development',
+    'E-Commerce Website Development',
+    'Custom Web Application Development',
+    'Custom Software Development',
+    'Admin Panel & CRM Development',
+    'Desktop Application Development',
+    'AI Solutions & Automation',
+    'API & Third-Party Integration',
+    'Cloud Deployment & Hosting',
+    'Website Maintenance & Support',
+    'Bug Fixing & Performance Optimization',
     'UI/UX Design',
-    'Frontend Development',
-    'Backend Development',
-    'Database Integration',
-    'Admin Panel Development',
-    'Testing & Quality Assurance',
-    'Deployment & Launch Support',
-    'E-Commerce Website',
-    'Business Website',
-    'Bug Fixing & Maintenance',
   ];
 
   return (
