@@ -26,21 +26,19 @@ const Footer = ({ setActivePage }) => {
         {/* ── Brand ── Left Aligned */}
         <div className="footer-brand">
           <div
-            className="logo-wrapper"
+            className="footer-logo-wrapper"
             onClick={() => setActivePage('Home')}
-            style={{ marginBottom: '1rem', cursor: 'pointer', alignItems: 'flex-start' }}
           >
             <img
               src="/logo.png"
               alt="AISPL Logo"
-              className="logo-img"
-              style={{ width: '58px', height: '58px', objectFit: 'contain' }}
+              className="footer-logo-img"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.style.display = 'none';
               }}
             />
-            <div className="logo-text-block" style={{ alignItems: 'flex-start' }}>
+            <div className="footer-logo-text-block">
               <div className="logo-text">AISPL</div>
               <div className="logo-subtext">Asprisha Innovation Solutions Pvt. Ltd.</div>
             </div>
