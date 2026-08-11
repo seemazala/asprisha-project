@@ -5,7 +5,7 @@ import * as THREE from 'three';
 // drift in 3D space and gently react to mouse movement. Lives behind
 // the hero content (zIndex 0), fully self-contained and cleaned up on
 // unmount so switching pages doesn't leak WebGL contexts.
-const PARTICLE_COUNT = window.innerWidth < 768 ? 45 : 85;
+const PARTICLE_COUNT = window.innerWidth < 768 ? 25 : 45;
 const MAX_DISTANCE = 130;
 const COLOR = 0x0dcfcf;
 
@@ -55,7 +55,7 @@ const ParticleNetwork = () => {
     const points = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(points);
 
-    // ---- Connection lines (rebuilt each frame between nearby particles) ----
+    // ---- Connection lines (rebuilt periodically between nearby particles) ----
     const lineMaterial = new THREE.LineBasicMaterial({
       color: COLOR,
       transparent: true,
@@ -75,6 +75,8 @@ const ParticleNetwork = () => {
     mount.addEventListener('mousemove', handleMouseMove);
 
     let animationId;
+    let frameCount = 0;
+
     const animate = () => {
       animationId = requestAnimationFrame(animate);
 
@@ -92,24 +94,28 @@ const ParticleNetwork = () => {
       }
       posAttr.needsUpdate = true;
 
-      // Rebuild connecting lines between nearby particles
-      const linePositions = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        for (let j = i + 1; j < PARTICLE_COUNT; j++) {
-          const dx = posAttr.getX(i) - posAttr.getX(j);
-          const dy = posAttr.getY(i) - posAttr.getY(j);
-          const dz = posAttr.getZ(i) - posAttr.getZ(j);
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist < MAX_DISTANCE) {
-            linePositions.push(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i));
-            linePositions.push(posAttr.getX(j), posAttr.getY(j), posAttr.getZ(j));
+      // Rebuild connecting lines only every 3rd frame — this is the
+      // expensive O(n^2) part, so we don't need it running at full 60fps.
+      frameCount++;
+      if (frameCount % 3 === 0) {
+        const linePositions = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          for (let j = i + 1; j < PARTICLE_COUNT; j++) {
+            const dx = posAttr.getX(i) - posAttr.getX(j);
+            const dy = posAttr.getY(i) - posAttr.getY(j);
+            const dz = posAttr.getZ(i) - posAttr.getZ(j);
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (dist < MAX_DISTANCE) {
+              linePositions.push(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i));
+              linePositions.push(posAttr.getX(j), posAttr.getY(j), posAttr.getZ(j));
+            }
           }
         }
+        lineGeometry.dispose();
+        lineGeometry = new THREE.BufferGeometry();
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePositions), 3));
+        lines.geometry = lineGeometry;
       }
-      lineGeometry.dispose();
-      lineGeometry = new THREE.BufferGeometry();
-      lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(linePositions), 3));
-      lines.geometry = lineGeometry;
 
       // Gentle camera parallax toward mouse position
       camera.position.x += (mouse.x * 60 - camera.position.x) * 0.02;
