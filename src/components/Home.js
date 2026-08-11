@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useScrollReveal } from './useScrollReveal';
 import CodeTypingWindow from './CodeTypingWindow';
 import ServicesMarquee from './ServicesMarquee';
+import ParticleNetwork from './ParticleNetwork';
 
 const Home = ({ setActivePage }) => {
   const [typed, setTyped] = useState('');
@@ -82,24 +83,8 @@ const Home = ({ setActivePage }) => {
           }}
         />
 
-        {/* Floating particles (kept from original) */}
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            style={{
-              position: 'absolute',
-              width: Math.random() * 4 + 2 + 'px',
-              height: Math.random() * 4 + 2 + 'px',
-              borderRadius: '50%',
-              background: 'var(--teal)',
-              opacity: 0.2 + Math.random() * 0.3,
-              top: Math.random() * 100 + '%',
-              left: Math.random() * 100 + '%',
-              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite alternate`,
-              zIndex: 1,
-            }}
-          />
-        ))}
+        {/* Three.js interactive particle network */}
+        <ParticleNetwork />
 
         <style>{`
           .hero-flex-row {

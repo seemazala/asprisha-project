@@ -14,6 +14,21 @@ const handleResponse = async (response) => {
 
 // API Service Object
 export const api = {
+  // ========== CHAT ===========
+  sendChatMessage: async (message, history) => {
+    try {
+      const response = await fetch(`${API_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, history }),
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      console.error('Chat error:', error);
+      return { success: false, message: error.message || 'Network error. Please try again.' };
+    }
+  },
+
   // ========== PROJECTS ==========
   
   // Get all active projects (Public)

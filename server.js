@@ -27,6 +27,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/contact', require('./routes/contact'));
+app.use('/api/chat', require('./routes/chat'));
 
 // ✅ ADD THIS HEALTH ROUTE (FIX)
 app.get('/api/health', (req, res) => {

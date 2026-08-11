@@ -11,7 +11,7 @@ const services = [
   { icon: '🖥️', title: 'Desktop Application Development', img: '/services/desktop-app.jpg' },
   { icon: '🤖', title: 'AI Solutions & Automation', img: '/services/ai-solutions.jpg' },
   { icon: '🔗', title: 'API & Third-Party Integration', img: '/services/api-integration.jpg' },
-  { icon: '☁️', title: 'Cloud Deployment & Hosting', img: '/services/deployment-launch.jpg' },
+  { icon: '☁️', title: 'Cloud Deployment & Hosting', img: '/services/ ' },
   { icon: '🛠️', title: 'Website Maintenance & Support', img: '/services/maintenance.jpg' },
   { icon: '🔧', title: 'Bug Fixing & Performance Optimization', img: '/services/bugfixing.jpg' },
   { icon: '📱', title: 'UI/UX Design', img: '/services/mobileapp.jpg' },
