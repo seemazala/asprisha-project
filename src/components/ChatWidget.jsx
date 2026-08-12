@@ -3,16 +3,54 @@ import { api } from '../services/api';
 
 const initialMessage = {
   role: 'assistant',
-  content: 'Hello! I am the AISPL assistant. How can I help with your project today?',
+  content: 'Hello! I am the AISPL assistant. Browse a topic below, or type your own question.',
 };
 
-const suggestions = ['Website development', 'AI solutions', 'Request a project quote'];
+// Category > sub-questions structure. Each question label is worded to match
+// the keywords in the backend chatController, so clicking it gets the right reply.
+const menu = [
+  {
+    category: 'Our Services',
+    questions: [
+      'What services do you offer?',
+      'Website Development',
+      'E-Commerce Development',
+      'Custom Web Applications',
+      'Custom Software Development',
+      'Admin Panel & CRM Development',
+      'Desktop Application Development',
+      'AI Solutions & Automation',
+      'API & Third-Party Integration',
+      'Cloud Deployment & Hosting',
+      'Website Maintenance & Support',
+      'Bug Fixing & Performance Optimization',
+      'UI/UX Design',
+    ],
+  },
+  {
+    category: 'Working With Us',
+    questions: [
+      'Which technologies do you use?',
+      'Will I own the source code?',
+      'How do you communicate during the project?',
+    ],
+  },
+  {
+    category: 'Pricing & Timeline',
+    questions: [
+      'What is your pricing?',
+      'How long will my project take?',
+    ],
+  },
+];
 
 function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([initialMessage]);
   const [draft, setDraft] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
+  const [activeCategory, setActiveCategory] = useState(null); // null = show category list
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -21,7 +59,7 @@ function ChatWidget() {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       inputRef.current?.focus();
     }
-  }, [isOpen, messages, isSending]);
+  }, [isOpen, messages, isSending, menuOpen, activeCategory]);
 
   const sendMessage = async (messageText = draft) => {
     const content = messageText.trim();
@@ -29,6 +67,7 @@ function ChatWidget() {
 
     setMessages((current) => [...current, { role: 'user', content }]);
     setDraft('');
+    setMenuOpen(false);
     setIsSending(true);
 
     const result = await api.sendChatMessage(content, messages);
@@ -47,6 +86,24 @@ function ChatWidget() {
   const handleSubmit = (event) => {
     event.preventDefault();
     sendMessage();
+  };
+
+  const handleNotListed = () => {
+    setMessages((current) => [
+      ...current,
+      {
+        role: 'assistant',
+        content:
+          "No worries! For anything not listed here, please reach out to us directly through our Contact page and we'll get back to you as soon as possible.",
+      },
+    ]);
+    setMenuOpen(false);
+    setActiveCategory(null);
+  };
+
+  const openMenu = () => {
+    setMenuOpen(true);
+    setActiveCategory(null);
   };
 
   return (
@@ -71,11 +128,34 @@ function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          {messages.length === 1 && (
-            <div className="chat-suggestions" aria-label="Suggested questions">
-              {suggestions.map((suggestion) => (
-                <button key={suggestion} type="button" onClick={() => sendMessage(suggestion)}>{suggestion}</button>
+          {!isSending && menuOpen && activeCategory === null && (
+            <div className="chat-suggestions" aria-label="Choose a topic">
+              {menu.map((group) => (
+                <button key={group.category} type="button" onClick={() => setActiveCategory(group.category)}>
+                  {group.category}
+                </button>
               ))}
+              <button type="button" onClick={handleNotListed}>Something else? / Not listed here</button>
+            </div>
+          )}
+
+          {!isSending && menuOpen && activeCategory !== null && (
+            <div className="chat-suggestions" aria-label="Choose a question">
+              <button type="button" onClick={() => setActiveCategory(null)}>← Back</button>
+              {menu
+                .find((group) => group.category === activeCategory)
+                ?.questions.map((q) => (
+                  <button key={q} type="button" onClick={() => sendMessage(q)}>
+                    {q}
+                  </button>
+                ))}
+              <button type="button" onClick={handleNotListed}>Something else? / Not listed here</button>
+            </div>
+          )}
+
+          {!isSending && !menuOpen && (
+            <div className="chat-suggestions" aria-label="Reopen topics">
+              <button type="button" onClick={openMenu}>📋 Browse Topics</button>
             </div>
           )}
 
