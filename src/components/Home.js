@@ -56,6 +56,8 @@ const Home = ({ setActivePage }) => {
           loop
           muted
           playsInline
+          width="1920"
+          height="1080"
           style={{
             position: 'absolute',
             top: 0,
