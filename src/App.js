@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import './styles/App.css';
@@ -47,7 +47,6 @@ const pageToPath = {
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [backendStatus, setBackendStatus] = useState('checking');
   const currentSeo = seoData[location.pathname] || seoData['/'];
 
   // Purane setActivePage('Home') calls ke liye — ab ye URL navigate karega
@@ -67,22 +66,6 @@ function App() {
   const activePage = pathToPage[location.pathname] || 'Home';
 
   useEffect(() => {
-    const checkBackend = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/health`);
-        if (response.ok) {
-          setBackendStatus('connected');
-        } else {
-          setBackendStatus('error');
-        }
-      } catch (error) {
-        setBackendStatus('error');
-      }
-    };
-    checkBackend();
-  }, []);
-
-  useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
 
@@ -97,39 +80,6 @@ function App() {
         <meta property="og:url" content={`https://asprisha.com${location.pathname}`} />
         <meta property="og:type" content="website" />
       </Helmet>
-
-      {backendStatus === 'error' && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          background: '#e63946',
-          color: 'white',
-          padding: '8px 16px',
-          borderRadius: '8px',
-          fontSize: '12px',
-          zIndex: 1000,
-          fontFamily: 'var(--font-display)'
-        }}>
-          ⚠️ Backend Not Connected
-        </div>
-      )}
-      {backendStatus === 'connected' && (
-        <div style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          background: '#2ecc71',
-          color: 'white',
-          padding: '8px 16px',
-          borderRadius: '8px',
-          fontSize: '12px',
-          zIndex: 1000,
-          fontFamily: 'var(--font-display)'
-        }}>
-          ✅ Backend Connected
-        </div>
-      )}
 
       <Navbar activePage={activePage} setActivePage={setActivePage} />
       <main>

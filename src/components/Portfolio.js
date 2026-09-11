@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 
+// Backend server address — update this if your backend runs on a different port/domain
+const BACKEND_URL = 'http://localhost:5000';
+
+// Turns a relative path like "/uploads/xyz.png" into a full URL.
+// If thumbnail already has http(s) in it, leave it as-is.
+const getImageUrl = (thumbnail) => {
+  if (!thumbnail) return null;
+  return thumbnail.startsWith('http') ? thumbnail : `${BACKEND_URL}${thumbnail}`;
+};
+
 const Portfolio = () => {
-  const [filter, setFilter] = useState('All');
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const categories = ['All', 'MERN Stack', 'React.js', 'Client Work'];
+  const [selectedProject, setSelectedProject] = useState(null); // NEW: controls modal
 
-  // Fetch projects from backend
+  // Fetch all projects from backend
   useEffect(() => {
     fetchProjects();
-  }, [filter]);
+  }, []);
 
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const data = await api.getProjects(filter);
+      const data = await api.getProjects('All');
       if (data.success) {
         setProjects(data.projects);
         setError(null);
@@ -31,6 +39,15 @@ const Portfolio = () => {
       setLoading(false);
     }
   };
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') setSelectedProject(null);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
 
   if (loading) {
     return (
@@ -62,9 +79,7 @@ const Portfolio = () => {
     );
   }
 
-  const filteredProjects = filter === 'All' 
-    ? projects 
-    : projects.filter(p => p.category === filter);
+  const filteredProjects = projects;
 
   return (
     <div style={{ paddingTop: '70px' }}>
@@ -76,31 +91,7 @@ const Portfolio = () => {
         </p>
       </section>
 
-      {/* Filter Buttons */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap', padding: '2rem 2rem 0' }}>
-        {categories.map(c => (
-          <button 
-            key={c} 
-            onClick={() => setFilter(c)} 
-            style={{
-              background: filter === c ? 'var(--teal)' : 'var(--navy-card)',
-              color: filter === c ? 'var(--navy)' : 'var(--muted)',
-              border: `1px solid ${filter === c ? 'var(--teal)' : 'var(--border)'}`,
-              padding: '8px 18px', 
-              borderRadius: '20px', 
-              cursor: 'pointer',
-              fontFamily: 'var(--font-display)', 
-              fontWeight: 600, 
-              fontSize: '0.8rem',
-              transition: 'all 0.2s',
-            }}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
-
-      {/* Projects Grid */}
+      {/* Projects Grid — CLEAN VERSION: only thumbnail + title + tagline, click to see full details */}
       <section style={{ padding: '2.5rem 2rem 5rem', maxWidth: '1100px', margin: '0 auto' }}>
         {filteredProjects.length === 0 ? (
           <div style={{ textAlign: 'center', color: 'var(--muted)' }}>
@@ -109,80 +100,204 @@ const Portfolio = () => {
         ) : (
           <div className="projects-grid">
             {filteredProjects.map((p, i) => (
-              <div key={p._id || i} className="card" style={{ overflow: 'hidden', padding: 0 }}>
+              <div 
+                key={p._id || i} 
+                className="card" 
+                onClick={() => setSelectedProject(p)}
+                style={{ overflow: 'hidden', padding: 0, cursor: 'pointer', transition: 'transform 0.2s' }}
+                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+                onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+              >
+                {/* Thumbnail area */}
                 <div style={{ 
-                  height: '120px', 
+                  height: '160px', 
                   background: `linear-gradient(135deg, ${p.color}22, ${p.color}44)`, 
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'center', 
                   fontSize: '3.5rem', 
-                  position: 'relative' 
+                  position: 'relative',
+                  overflow: 'hidden'
                 }}>
-                  {p.icon}
-                  <span className="project-badge" style={{ 
-                    position: 'absolute', 
-                    top: '12px', 
-                    right: '12px', 
-                    background: 'var(--navy)', 
-                    border: '1px solid var(--border)', 
-                    color: 'var(--teal)', 
-                    padding: '3px 10px', 
-                    borderRadius: '20px', 
-                    fontSize: '0.7rem', 
-                    fontFamily: 'var(--font-display)', 
-                    fontWeight: 600 
-                  }}>
-                    {p.category}
-                  </span>
+                  {p.thumbnail ? (
+                    <img 
+                      src={getImageUrl(p.thumbnail)} 
+                      alt={p.title} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    />
+                  ) : (
+                    p.icon
+                  )}
                 </div>
-                <div style={{ padding: '1.5rem' }}>
+
+                {/* Only title + short tagline — no description, no tech tags, no live link */}
+                <div style={{ padding: '1.25rem 1.5rem' }}>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.1rem', color: 'var(--white)', marginBottom: '4px' }}>
                     {p.title}
                   </h3>
-                  <div style={{ color: p.color, fontSize: '0.8rem', marginBottom: '0.75rem' }}>
+                  <div style={{ color: p.color, fontSize: '0.8rem' }}>
                     {p.subtitle}
                   </div>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
-                    {p.description}
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '1.25rem' }}>
-                    {p.techStack?.map(t => (
-                      <span key={t} style={{ 
-                        background: 'rgba(13,207,207,0.07)', 
-                        border: '1px solid var(--border)', 
-                        color: 'var(--white)', 
-                        padding: '3px 8px', 
-                        borderRadius: '4px', 
-                        fontSize: '0.72rem' 
-                      }}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                  <a 
-                    href={p.liveUrl} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    style={{ 
-                      color: 'var(--teal)', 
-                      fontFamily: 'var(--font-display)', 
-                      fontWeight: 600, 
-                      fontSize: '0.85rem', 
-                      textDecoration: 'none', 
-                      borderBottom: '1px solid transparent' 
-                    }}
-                    onMouseEnter={e => e.target.style.borderBottomColor = 'var(--teal)'}
-                    onMouseLeave={e => e.target.style.borderBottomColor = 'transparent'}
-                  >
-                    View Live Project →
-                  </a>
                 </div>
               </div>
             ))}
+
+            {/* Contact CTA card — stays last always since it's outside the projects map */}
+            <a
+              href="/contact"
+              className="card"
+              style={{
+                overflow: 'hidden',
+                padding: 0,
+                cursor: 'pointer',
+                textDecoration: 'none',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textAlign: 'center',
+                minHeight: '100%',
+                border: '1px dashed var(--border)',
+                transition: 'transform 0.2s'
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-4px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <div style={{ padding: '2rem 1.5rem' }}>
+                <div style={{ fontSize: '2.2rem', marginBottom: '0.75rem' }}>💬</div>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.05rem', color: 'var(--white)', marginBottom: '6px' }}>
+                  Want More Project Details?
+                </h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '0.75rem' }}>
+                  Get in touch to see live demos and discuss your project.
+                </p>
+                <span style={{ color: 'var(--teal)', fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: '0.85rem' }}>
+                  Contact Us →
+                </span>
+              </div>
+            </a>
           </div>
         )}
       </section>
+
+      {/* Detail Modal — opens on click, shows full info + privacy-safe CTA */}
+      {selectedProject && (
+        <div 
+          onClick={() => setSelectedProject(null)}
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(5,10,20,0.8)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '2rem'
+          }}
+        >
+          <div 
+            onClick={e => e.stopPropagation()}
+            className="card"
+            style={{
+              maxWidth: '520px',
+              width: '100%',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              padding: 0,
+              position: 'relative'
+            }}
+          >
+            <button
+              onClick={() => setSelectedProject(null)}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                background: 'var(--navy)',
+                border: '1px solid var(--border)',
+                color: 'var(--white)',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                zIndex: 2
+              }}
+            >
+              ✕
+            </button>
+
+            <div style={{ 
+              height: '220px', 
+              background: `linear-gradient(135deg, ${selectedProject.color}22, ${selectedProject.color}44)`, 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              fontSize: '4.5rem',
+              overflow: 'hidden'
+            }}>
+              {selectedProject.thumbnail ? (
+                <img 
+                  src={getImageUrl(selectedProject.thumbnail)} 
+                  alt={selectedProject.title} 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                />
+              ) : (
+                selectedProject.icon
+              )}
+            </div>
+
+            <div style={{ padding: '1.75rem' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '1.4rem', color: 'var(--white)', margin: '0 0 4px' }}>
+                {selectedProject.title}
+              </h2>
+              <div style={{ color: selectedProject.color, fontSize: '0.85rem', marginBottom: '1rem' }}>
+                {selectedProject.subtitle}
+              </div>
+
+              <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+                {selectedProject.description}
+              </p>
+
+              {selectedProject.techStack?.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '1.5rem' }}>
+                  {selectedProject.techStack.map(t => (
+                    <span key={t} style={{ 
+                      background: 'rgba(13,207,207,0.07)', 
+                      border: '1px solid var(--border)', 
+                      color: 'var(--white)', 
+                      padding: '3px 8px', 
+                      borderRadius: '4px', 
+                      fontSize: '0.72rem' 
+                    }}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Privacy-safe CTA — no direct live link, sends user to Contact */}
+              <a
+                href="/contact"
+                style={{
+                  display: 'inline-block',
+                  background: 'var(--teal)',
+                  color: 'var(--navy)',
+                  fontFamily: 'var(--font-display)',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  padding: '10px 22px',
+                  borderRadius: '6px',
+                  textDecoration: 'none'
+                }}
+              >
+                Contact for Live Demo →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
