@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../services/api';
 
-// Backend server address — update this if your backend runs on a different port/domain
-const BACKEND_URL = 'http://localhost:5000';
+// Backend server address — reads from the same env variable used for API calls
+// (REACT_APP_API_URL usually looks like ".../api", so we strip that off for images/uploads)
+const BACKEND_URL = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/api\/?$/, '');
 
 // Turns a relative path like "/uploads/xyz.png" into a full URL.
 // If thumbnail already has http(s) in it, leave it as-is.
