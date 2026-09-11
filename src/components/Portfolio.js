@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../services/api';
 
 // Backend server address — reads from the same env variable used for API calls
@@ -144,8 +145,8 @@ const Portfolio = () => {
             ))}
 
             {/* Contact CTA card — stays last always since it's outside the projects map */}
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="card"
               style={{
                 overflow: 'hidden',
@@ -176,7 +177,7 @@ const Portfolio = () => {
                   Contact Us →
                 </span>
               </div>
-            </a>
+            </Link>
           </div>
         )}
       </section>
@@ -279,8 +280,8 @@ const Portfolio = () => {
               )}
 
               {/* Privacy-safe CTA — no direct live link, sends user to Contact */}
-              <a
-                href="/contact"
+              <Link
+                to="/contact"
                 style={{
                   display: 'inline-block',
                   background: 'var(--teal)',
@@ -294,7 +295,7 @@ const Portfolio = () => {
                 }}
               >
                 Contact for Live Demo →
-              </a>
+              </Link>
             </div>
           </div>
         </div>
